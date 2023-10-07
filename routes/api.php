@@ -14,5 +14,10 @@ Route::post('/reverse-me',function(Request $request){  // this is my first post 
     return $reverse;
 });
 
-Route::get('posts',[PostController::class,'index']);
-Route::post('create-post',[PostController::class,'store']);
+Route::get('posts',[PostController::class,'getAllPost']);          // show all posts
+Route::post('add-post',[PostController::class,'addPost']);   // create post
+Route::get('posts/{post}', [PostController::class, 'getSpecificPost']);   // show spesific post
+Route::post('update-post', [PostController::class, 'updatePost']);   // Update post
+Route::post('delete-post', [PostController::class, 'deletePost']);   // Delete post
+
+// Route::apiResource('posts',PostController::class);   // if we used {post} for id 

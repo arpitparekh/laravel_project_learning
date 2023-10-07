@@ -18,4 +18,11 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+
+    # serve existing files in the /public folder as if they were in /
+    RewriteCond %{DOCUMENT_ROOT}public%{REQUEST_URI} -f
+    RewriteRule (.+) /laravel-app/public/$1 [L]
+
+    # route everything else to /public/index.php
+    RewriteRule ^ /laravel-app/public/index.php [L]
 </IfModule>
