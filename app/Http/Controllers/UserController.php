@@ -37,16 +37,68 @@ class UserController extends Controller
 
         // $user->save();
 
-        User::create([                                  // use this insted of upper code
+        $user = User::create([                                  // use this insted of upper code
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),       // hash password
-            'tc' => json_decode($request->input('tc')),
+            'tc' => json_decode($request->input('tc')),                  // with json decode u can write true or false
         ]);
+
+        // do not need token for registration
+        // $token = $user->createToken($request->email)->plainTextToken;    // generate token on the basis of email address
 
         return response([
             'message' => 'User Registered Succesfully',
-            'status' => 'success'
+            'status' => 'success',
+            // 'token'=>$token
         ], 201);
     }
+
+    public function login(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'email'=>'required|email',
+            'password'=>'required|min:6'
+        ]);
+
+        if ($validator->fails()) {
+            return response(['message' => $validator->errors()->first(), 'status' => 'failed'], 200);
+        }
+
+        $user = User::where('email', $request->input('email'))->first();
+        
+        if($user && Hash::check($request->input('password'),$user->password)){
+
+            $token = $user->createToken($request->email)->plainTextToken;
+
+            return response([
+                'message' => 'User Login Succesfully',
+                'sttus' => 'success',
+                    'token'=>$token
+            ], 201);
+        }
+
+        return response([
+            'message' => 'The provided creadentials are wrong',
+            'status' => 'failed'
+        ], 200);
+
+    }
+
+    public function logout(){
+        $user = auth()->user();
+
+        $user->tokens->each(function ($token) {
+            $token->delete();
+        });
+
+        return response([
+            'message' => 'User Logout Successfully',
+            'status' => 'success'
+        ], 201);
+
+
+    }
+
+
 }

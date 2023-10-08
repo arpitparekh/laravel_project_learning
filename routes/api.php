@@ -22,13 +22,19 @@ Route::post('delete-post', [PostController::class, 'deletePost']);   // Delete p
 
 // Route::apiResource('posts',PostController::class);   // if we used {post} for id 
 
-// public route
-
 Route::prefix('user')->group(function () {   // added user prefix in api route
 
-    Route::post('/register',[UserController::class,'register']);
+    // public route
+    Route::post('register',[UserController::class,'register']);
+    Route::post('login',[UserController::class,'login']);
+
+    // private route
+    Route::middleware(['auth:sanctum'])->group(function () {
+         Route::post('logout',[UserController::class,'logout']);
+    });
+
 });
 
 
-// private route
+
 
