@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
-
+use App\Http\Controllers\UserController;
 
 Route::get("/hello",function(){   // this is my first get request
     return "Hello World";
@@ -21,3 +21,14 @@ Route::post('update-post', [PostController::class, 'updatePost']);   // Update p
 Route::post('delete-post', [PostController::class, 'deletePost']);   // Delete post
 
 // Route::apiResource('posts',PostController::class);   // if we used {post} for id 
+
+// public route
+
+Route::prefix('user')->group(function () {   // added user prefix in api route
+
+    Route::post('/register',[UserController::class,'register']);
+});
+
+
+// private route
+
